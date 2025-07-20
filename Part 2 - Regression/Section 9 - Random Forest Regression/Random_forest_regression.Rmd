@@ -1,0 +1,73 @@
+---
+title: "Random_Forest_Regression"
+author: "Sasha Ajay Malkani"
+date: "2025-06-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Importing the Dataset
+
+```{r Importing the Dataset}
+dataset = read.csv('Position_Salaries.csv')
+
+print(dataset)
+
+```
+
+## Reset the dataset
+
+```{r Reset the dataset}
+dataset = dataset[2:3]
+
+print(dataset)
+
+```
+
+## Fitting Random Forest Regression to the dataset
+
+```{r Fitting Random Forest Regression to the dataset}
+# install.packages("randomForest")
+library(randomForest)
+set.seed(1234)
+regressor = randomForest(x = dataset[1],
+                         y = dataset$Salary,
+                         ntree = 101)
+
+summary(regressor)
+
+```
+
+## Predicting a new result
+
+```{r # Predicting a new result}
+
+y_pred = predict(regressor, data.frame(Level = 6.5))
+
+print(y_pred)
+
+```
+
+## Visualising the Random Forest Regression results (higher resolution)
+
+```{r Visualising the Random Forest Regression}
+
+# install.packages('ggplot2')
+library(ggplot2)
+x_grid = seq(min(dataset$Level), max(dataset$Level), 0.01)
+ggplot() +
+  geom_point(aes(x = dataset$Level, y = dataset$Salary),
+             colour = 'red') +
+  geom_line(aes(x = x_grid, y = predict(regressor, newdata = data.frame(Level = x_grid))),
+            colour = 'blue') +
+  ggtitle('Truth or Bluff (Random Forest Regression)') +
+  xlab('Level') +
+  ylab('Salary')
+
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

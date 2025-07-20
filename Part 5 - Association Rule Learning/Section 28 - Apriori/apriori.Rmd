@@ -1,0 +1,62 @@
+---
+title: "Association Rules Learning - Apriori"
+author: "Sasha Ajay Malkani"
+date: "2025-06-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Importing the dataset
+
+```{r Importing the dataset}
+# install.packages("arules")
+library(arules)
+dataset = read.csv('Market_Basket_Optimisation.csv', header = FALSE)
+dataset = read.transactions('Market_Basket_Optimisation.csv', sep = ',', rm.duplicates = TRUE)
+summary(dataset)
+itemFrequencyPlot(dataset, topN = 10)
+```
+
+## Training Apriori on the dataset (support = 0.003 & confidence = 0.4)
+
+```{r Training Apriori on the dataset 1}
+rules = apriori(data = dataset, parameter = list(support = 0.003, confidence = 0.4))
+
+```
+
+## Visualising the results (support = 0.003 & confidence = 0.4)
+
+```{r Visualising the results 1}
+inspect(sort(rules, by = 'lift')[1:10])
+```
+
+## Training Apriori on the dataset (support = 0.003 & confidence = 0.2)
+
+```{r Training Apriori on the dataset 2}
+rules = apriori(data = dataset, parameter = list(support = 0.003, confidence = 0.2))
+
+```
+
+## Visualising the results (support = 0.003 & confidence = 0.2)
+
+```{r Visualising the results 2}
+inspect(sort(rules, by = 'lift')[1:10])
+```
+
+## Training Apriori on the dataset (support = 0.004 & confidence = 0.2)
+
+```{r Training Apriori on the dataset 3}
+rules = apriori(data = dataset, parameter = list(support = 0.004, confidence = 0.2))
+
+```
+
+## Visualising the results (support = 0.004 & confidence = 0.2)
+
+```{r Visualising the results 3}
+inspect(sort(rules, by = 'lift')[1:10])
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

@@ -1,0 +1,117 @@
+---
+title: "Artificial Neural Network"
+author: "Sasha Ajay Malkani"
+date: "2025-07-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Importing the dataset
+
+```{r Importing the dataset}
+dataset = read.csv('Churn_Modelling.csv')
+head(dataset)
+dataset = dataset[, 4:14]
+head(dataset)
+```
+
+## Encoding categorical data
+
+```{r Encoding categorical data}
+dataset$Geography = as.numeric(factor(dataset$Geography,
+                         levels = c('France', 'Spain', 'Germany'),
+                         labels = c(1, 2, 3)))
+dataset$Gender = as.numeric(factor(dataset$Gender,
+                           levels = c('Female', 'Male'),
+                           labels = c(1, 2)))
+head(dataset)
+```
+
+## Splitting the dataset into the Training set and Test set
+
+```{r Splitting the dataset into the Training set and Test set}
+# install.packages('caTools')
+library(caTools)
+set.seed(123)
+split = sample.split(dataset$Exited, SplitRatio = 0.8)
+training_set = subset(dataset, split == TRUE)
+test_set = subset(dataset, split == FALSE)
+head(training_set)
+head(test_set)
+
+```
+
+## Feature Scaling
+
+```{r Feature Scaling}
+training_set[-11] = scale(training_set[-11])
+test_set[-11] = scale(test_set[-11])
+
+head(training_set)
+head(test_set)
+```
+
+## Fitting ANN to the Training set
+
+```{r Fitting ANN to the Training set}
+# install.packages("h2o")
+# install.packages("data.table")
+library(h2o)
+library(data.table)
+h2o.init(nthreads = -1)
+classifier = h2o.deeplearning(y = "Exited", 
+                              training_frame = as.h2o(training_set),
+                              activation = "Rectifier",
+                              hidden = c(6,6),
+                              epochs = 100,
+                              train_samples_per_iteration = -2)
+summary(classifier)
+```
+
+## Predicting the Test set results
+
+```{r Predicting the Test set results}
+prob_pred = h2o.predict(classifier, newdata = as.h2o(test_set[-11]))
+y_pred = (prob_pred > 0.5)
+y_pred = as.vector(y_pred)
+head(paste("Predicted:", y_pred))
+head(paste("Actual:", test_set$Exited))
+```
+
+## Making the Confusion Matrix
+
+```{r Making the Confusion Matrix}
+cm = table(test_set[, 11], y_pred)
+cm
+```
+
+## Performance Metrics
+
+```{r Performance Metrics}
+accuracy <- sum(diag(cm)) / sum(cm)
+precision <- cm[2, 2] / sum(cm[2, ])
+recall <- cm[2, 2] / sum(cm[, 2])
+f1_score <- 2 * (precision * recall) / (precision + recall)
+print(paste("Accuracy:", accuracy))
+print(paste("Precision:", precision))
+print(paste("Recall:", recall))
+print(paste("F1 Score:", f1_score))
+```
+
+## Shutdown H2O
+
+```{r Shutdown H2O}
+h2o.shutdown()
+```
+
+## 
+
+```{r }
+
+```
+
+
+

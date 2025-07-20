@@ -1,0 +1,109 @@
+---
+title: "Polynomial Linear Regression"
+author: "Sasha Ajay Malkani"
+date: "2025-06-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Importing the Dataset
+
+
+```{r Importing the Dataset}
+dataset = read.csv('Position_Salaries.csv')
+print(dataset)
+
+```
+
+## Reset the dataset
+
+```{r Reset the dataset}
+
+dataset = dataset[2:3]
+print(dataset)
+
+```
+
+## Fitting Linear Regression to the dataset
+
+```{r Fitting Linear Regression to the dataset}
+lin_reg = lm(formula = Salary ~ .,
+             data = dataset)
+
+summary(lin_reg)
+
+```
+
+## Fitting Polynomial Regression to the dataset
+
+```{r Fitting Polynomial Regression to the dataset}
+dataset$Level2 = dataset$Level^2
+dataset$Level3 = dataset$Level^3
+dataset$Level4 = dataset$Level^4
+poly_reg = lm(formula = Salary ~ .,
+             data = dataset)
+
+summary(poly_reg)
+
+```
+
+## Visualizing the Linear Regression results
+
+```{r Visualizing the Linear Regression results}
+# install.packages('ggplot2')
+library(ggplot2)
+ggplot() + 
+  geom_point(aes(x = dataset$Level, y = dataset$Salary), 
+             colour = 'red') +
+  geom_line(aes(x = dataset$Level, y = predict(lin_reg, newdata = dataset)), 
+             colour = 'blue') +
+  ggtitle('Truth or Bluff (Linear Regression)') +
+  xlab('Level') +
+  ylab('Salary')
+
+```
+
+
+## Visualizing the Polynomial Regression results
+
+```{r Visualizing the Polynomial Regression results}
+ggplot() + 
+  geom_point(aes(x = dataset$Level, y = dataset$Salary), 
+             colour = 'red') +
+  geom_line(aes(x = dataset$Level, y = predict(poly_reg, newdata = dataset)), 
+            colour = 'blue') +
+  ggtitle('Truth or Bluff (Polynomial Regression)') +
+  xlab('Level') +
+  ylab('Salary')
+
+```
+
+## Predicting a new result with Linear Regression
+
+```{r Predicting a new result with Linear Regression}
+y_pred = predict(lin_reg, data.frame(Level = 6.5))
+
+print(y_pred)
+
+```
+
+## Predicting a new result with Polynomial Regression
+
+```{r Predicting a new result with Polynomial Regression}
+y_pred = predict(poly_reg, data.frame(Level = 6.5,
+                                      Level2 = 6.5^2,
+                                      Level3 = 6.5^3,
+                                      Level4 = 6.5^4))
+
+print(y_pred)
+
+```
+
+
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

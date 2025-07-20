@@ -1,0 +1,85 @@
+---
+title: "Logistic Regression - A practical case Study - Breast Cancer"
+author: "Sasha Ajay Malkani"
+date: "2025-06-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Importing the dataset
+
+```{r Importing the dataset}
+dataset = read.csv('breast_cancer.csv')
+
+head(dataset)
+
+```
+
+## Eliminating ID column
+
+```{r Eliminating ID column}
+dataset = dataset[, 2:11]
+
+head(dataset)
+
+```
+
+## Encoding the target feature as factor
+
+```{r Encoding the target feature as factor}
+dataset$Class = factor(dataset$Class, levels = c(2, 4))
+
+```
+
+
+## Splitting the dataset into the Training set and Test set
+
+```{r # Splitting the dataset into the Training set and Test set}
+library(caTools)
+set.seed(123)
+split = sample.split(dataset$Class, SplitRatio = 0.8)
+training_set = subset(dataset, split == TRUE)
+test_set = subset(dataset, split == FALSE)
+
+head(training_set)
+head(test_set)
+
+```
+
+## Fitting Logistic Regression to the Training set
+
+```{r Fitting Logistic Regression to the Training set}
+classifier = glm(formula = Class ~ .,
+                 family = binomial,
+                 data = training_set)
+
+summary(classifier)
+
+```
+
+## Predicting the Test set results
+
+```{r Predicting the Test set results}
+prob_pred = predict(classifier, type = 'response', newdata = test_set)
+print(prob_pred)
+y_pred = ifelse(prob_pred > 0.5, 1, 0)
+print(y_pred)
+
+```
+
+## Confusion Matrix
+
+```{r Confusion Matrix}
+cm = table(test_set[, 10], y_pred)
+print(cm)
+
+```
+
+
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

@@ -1,0 +1,40 @@
+---
+title: "Association Rules Learning - Eclat"
+author: "Sasha Ajay Malkani"
+date: "2025-06-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Importing the dataset
+
+```{r Importing the dataset}
+# install.packages("arules")
+library(arules)
+dataset = read.transactions('Market_Basket_Optimisation.csv', sep = ',', rm.duplicates = TRUE)
+summary(dataset)
+itemFrequencyPlot(dataset, topN = 10)
+
+```
+
+## Training Eclat on the dataset
+
+```{r Training Eclat on the dataset}
+rules = eclat(data = dataset, parameter = list(support = 0.003, minlen = 2))
+
+```
+
+## Visualising the results
+
+```{r Visualising the results}
+inspect(sort(rules, by = 'support')[1:10])
+
+```
+
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
