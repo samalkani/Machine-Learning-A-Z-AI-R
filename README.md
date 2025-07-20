@@ -1,10 +1,9 @@
-# Machine Learning A-Z AI-Python & R 
+# Machine Learning A-Z AI-R 
 https://github.com/samalkani/Machine-Learning-A-Z-AI-Python-R
 
 Machine and deep learning Algorithms in Python (ipynb, py), R, R-markdown, html format. 
 
-1. The Python code in ipynb and py format and the datasets are contained in the python folders within 
-the different section folders below
+1. The Python code in ipynb and py format and the datasets are contained in a separate repository at: https://github.com/samalkani/Machine-Learning-A-Z-AI-Python-R
 
 2. The R code in R files and R-markdown format and the datasets are contained in the R folders within 
 the different section folders below
